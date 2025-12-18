@@ -189,8 +189,11 @@ function App() {
 
           {/* Model Badge */}
           <div className="flex items-center gap-2">
-            <div className="text-[10px] md:text-xs font-medium px-2.5 py-1.5 rounded-full bg-zinc-900 border border-zinc-800 text-zinc-400 flex items-center gap-2 shadow-sm">
-              <span className={`w-1.5 h-1.5 rounded-full ${isLoading ? 'bg-purple-500 animate-pulse' : 'bg-green-500'}`}></span>
+            <button
+              onClick={() => setIsSidebarOpen(true)}
+              className="text-[10px] md:text-xs font-medium px-3 py-1.5 rounded-full bg-zinc-900/80 border border-zinc-700/50 hover:border-purple-500/50 hover:bg-zinc-800 text-zinc-300 transition-all cursor-pointer flex items-center gap-2 shadow-sm active:scale-95"
+            >
+              <span className={`w-1.5 h-1.5 rounded-full ${isLoading ? 'bg-purple-500 animate-pulse' : 'bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]'}`}></span>
               <span className="truncate max-w-[120px] md:max-w-none">
                 {currentModelName}
               </span>
@@ -200,7 +203,7 @@ function App() {
                   {config.useGrounding && <span title="Search Enabled">🌐</span>}
                 </div>
               )}
-            </div>
+            </button>
           </div>
         </header>
 

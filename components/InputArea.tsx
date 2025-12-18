@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Send, Image as ImageIcon, X, Loader2 } from 'lucide-react';
+import { Send, Image as ImageIcon, X, Loader2, Mic } from 'lucide-react';
 
 interface InputAreaProps {
   onSendMessage: (text: string, images: File[]) => void;
@@ -15,7 +15,7 @@ const ImagePreview = ({ file, onRemove }: { file: File, onRemove: () => void }) 
     // Create object URL for preview
     const url = URL.createObjectURL(file);
     setPreview(url);
-    
+
     // Cleanup URL on unmount or file change to prevent memory leaks
     return () => {
       URL.revokeObjectURL(url);
@@ -26,15 +26,15 @@ const ImagePreview = ({ file, onRemove }: { file: File, onRemove: () => void }) 
 
   return (
     <div className="relative group flex-shrink-0 animate-in fade-in zoom-in duration-200">
-      <img 
-        src={preview} 
-        alt="preview" 
-        className="w-14 h-14 md:w-16 md:h-16 object-cover rounded-lg border border-zinc-700 bg-zinc-800" 
+      <img
+        src={preview}
+        alt="preview"
+        className="w-14 h-14 md:w-16 md:h-16 object-cover rounded-lg border border-zinc-700 bg-zinc-800"
       />
-      <button 
+      <button
         onClick={(e) => {
-            e.stopPropagation(); // Prevent event bubbling
-            onRemove();
+          e.stopPropagation(); // Prevent event bubbling
+          onRemove();
         }}
         className="absolute -top-1.5 -right-1.5 bg-zinc-800 rounded-full p-1 text-zinc-400 hover:text-red-400 border border-zinc-700 shadow-sm transition-colors hover:bg-zinc-700 z-10"
         title="Remove image"
@@ -49,6 +49,7 @@ const ImagePreview = ({ file, onRemove }: { file: File, onRemove: () => void }) 
 const InputArea: React.FC<InputAreaProps> = ({ onSendMessage, disabled, model }) => {
   const [text, setText] = useState('');
   const [images, setImages] = useState<File[]>([]);
+  const [isListening, setIsListening] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -96,33 +97,41 @@ const InputArea: React.FC<InputAreaProps> = ({ onSendMessage, disabled, model })
     return "Message Gemini...";
   };
 
+  const handleVoiceClick = () => {
+    // Toggle listening state for visual feedback
+    setIsListening(!isListening);
+    // In a full implementation, this would trigger speech recognition
+    // For now, it's just a UI element
+    setTimeout(() => setIsListening(false), 2000);
+  };
+
   return (
     <div className="border-t border-zinc-800/50 bg-zinc-950/80 backdrop-blur-lg p-3 md:p-4 z-20 pb-[max(12px,env(safe-area-inset-bottom))] transition-all duration-200">
       <div className="max-w-3xl mx-auto flex flex-col gap-3">
-        
+
         {/* Image Previews */}
         {images.length > 0 && (
           <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-zinc-700 scrollbar-track-transparent px-1">
             {images.map((img, i) => (
-              <ImagePreview 
-                key={`${img.name}-${i}`} 
-                file={img} 
-                onRemove={() => removeImage(i)} 
+              <ImagePreview
+                key={`${img.name}-${i}`}
+                file={img}
+                onRemove={() => removeImage(i)}
               />
             ))}
           </div>
         )}
 
         <div className="relative flex items-end gap-2 bg-zinc-900/50 p-1.5 md:p-2 rounded-2xl border border-zinc-800 focus-within:border-zinc-700 focus-within:bg-zinc-900 transition-all shadow-sm">
-          <input 
-            type="file" 
-            multiple 
-            accept="image/*" 
-            className="hidden" 
-            ref={fileInputRef} 
-            onChange={handleFileChange} 
+          <input
+            type="file"
+            multiple
+            accept="image/*"
+            className="hidden"
+            ref={fileInputRef}
+            onChange={handleFileChange}
           />
-          <button 
+          <button
             onClick={() => fileInputRef.current?.click()}
             className="p-2.5 text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800 rounded-xl transition-colors flex-shrink-0 active:scale-95"
             title="Add images"
@@ -131,7 +140,23 @@ const InputArea: React.FC<InputAreaProps> = ({ onSendMessage, disabled, model })
           >
             <ImageIcon size={20} strokeWidth={2} />
           </button>
-          
+
+          <button
+            onClick={handleVoiceClick}
+            className={`p-2.5 rounded-xl transition-all flex-shrink-0 active:scale-95 relative ${isListening
+                ? 'text-purple-400 bg-purple-500/20 animate-pulse'
+                : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800'
+              }`}
+            title="Voice input"
+            disabled={disabled}
+            aria-label="Voice input"
+          >
+            <Mic size={20} strokeWidth={2} />
+            {isListening && (
+              <span className="absolute inset-0 rounded-xl border-2 border-purple-400 animate-ping"></span>
+            )}
+          </button>
+
           <textarea
             ref={textareaRef}
             value={text}
@@ -142,15 +167,14 @@ const InputArea: React.FC<InputAreaProps> = ({ onSendMessage, disabled, model })
             rows={1}
             disabled={disabled}
           />
-          
-          <button 
+
+          <button
             onClick={handleSend}
             disabled={(!text.trim() && images.length === 0) || disabled}
-            className={`p-2.5 rounded-xl transition-all flex-shrink-0 active:scale-95 flex items-center justify-center ${
-              (!text.trim() && images.length === 0) || disabled
-                ? 'bg-zinc-800 text-zinc-600 cursor-not-allowed' 
+            className={`p-2.5 rounded-xl transition-all flex-shrink-0 active:scale-95 flex items-center justify-center ${(!text.trim() && images.length === 0) || disabled
+                ? 'bg-zinc-800 text-zinc-600 cursor-not-allowed'
                 : 'bg-white text-black hover:bg-zinc-200 shadow-lg shadow-white/5'
-            }`}
+              }`}
             aria-label="Send message"
           >
             {disabled ? <Loader2 size={20} className="animate-spin" /> : <Send size={20} fill="currentColor" className="ml-0.5" />}
