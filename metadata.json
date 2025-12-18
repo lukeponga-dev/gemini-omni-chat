@@ -1,0 +1,5 @@
+{
+  "name": "Gemini Omni-Chat",
+  "description": "A powerful multimodal AI assistant showcasing Gemini 3 capabilities including Thinking capability, Search Grounding, and Vision inputs.",
+  "requestFramePermissions": []
+}
