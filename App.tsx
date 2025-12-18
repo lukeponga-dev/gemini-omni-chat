@@ -37,7 +37,7 @@ function App() {
   const handleSendMessage = async (text: string, files: File[]) => {
     // Optimistic UI update
     const userMessageId = Date.now().toString();
-    
+
     // Process images for state display (convert to base64)
     let base64Images: string[] = [];
     if (files.length > 0) {
@@ -59,28 +59,28 @@ function App() {
     // Create placeholder for bot response
     const botMessageId = (Date.now() + 1).toString();
     setMessages((prev) => [
-      ...prev, 
-      { 
-        id: botMessageId, 
-        role: Role.MODEL, 
-        text: '', 
-        timestamp: Date.now() 
+      ...prev,
+      {
+        id: botMessageId,
+        role: Role.MODEL,
+        text: '',
+        timestamp: Date.now()
       }
     ]);
 
     try {
       const stream = geminiService.streamMessage(text, files, config, messages);
-      
+
       let accumulatedText = '';
       let accumulatedImages: string[] = [];
 
       for await (const chunk of stream) {
         accumulatedText += chunk.text;
-        
+
         if (chunk.generatedImages) {
-            // Add new images to our list if they aren't already there (simple check)
-            // Note: Usually images come in one chunk, but robustly append if needed.
-            accumulatedImages = [...accumulatedImages, ...chunk.generatedImages];
+          // Add new images to our list if they aren't already there (simple check)
+          // Note: Usually images come in one chunk, but robustly append if needed.
+          accumulatedImages = [...accumulatedImages, ...chunk.generatedImages];
         }
 
         setMessages((prev) => prev.map(msg => {
@@ -90,10 +90,10 @@ function App() {
               text: accumulatedText,
               images: accumulatedImages.length > 0 ? accumulatedImages : undefined,
               // Merge grounding sources if any new ones appear
-              groundingSources: chunk.groundingSources ? 
+              groundingSources: chunk.groundingSources ?
                 [...(msg.groundingSources || []), ...chunk.groundingSources]
                   // Simple deduplication based on URI
-                  .filter((v, i, a) => a.findIndex(t => t.uri === v.uri) === i) 
+                  .filter((v, i, a) => a.findIndex(t => t.uri === v.uri) === i)
                 : msg.groundingSources
             };
           }
@@ -103,10 +103,10 @@ function App() {
 
     } catch (error: any) {
       console.error("Error processing message:", error);
-      
+
       let errorMessage = "Sorry, an unexpected error occurred. Please try again.";
       const errString = error.toString();
-      
+
       if (error.message === "MISSING_API_KEY") {
         errorMessage = "⚠️ Configuration Error: API Key is missing. Please set `process.env.API_KEY`.";
       } else if (errString.includes("403") || errString.includes("API key not valid")) {
@@ -120,9 +120,9 @@ function App() {
       }
 
       // Update the placeholder message with the error message
-      setMessages((prev) => prev.map(msg => 
-        msg.id === botMessageId 
-          ? { ...msg, text: errorMessage } 
+      setMessages((prev) => prev.map(msg =>
+        msg.id === botMessageId
+          ? { ...msg, text: errorMessage }
           : msg
       ));
     } finally {
@@ -140,33 +140,33 @@ function App() {
   return (
     <div className="flex h-[100dvh] w-full overflow-hidden bg-zinc-950 text-zinc-100 font-sans selection:bg-blue-500/30 relative">
       <SnowBackground />
-      
-      <Sidebar 
-        config={config} 
-        setConfig={setConfig} 
+
+      <Sidebar
+        config={config}
+        setConfig={setConfig}
         onClearChat={handleClearChat}
         isOpen={isSidebarOpen}
         setIsOpen={setIsSidebarOpen}
       />
-      
+
       {/* Removed bg-zinc-950 from main to allow snow to show through */}
       <main className="flex-1 flex flex-col min-w-0 relative z-10">
         {/* Header */}
         <header className="h-14 md:h-16 border-b border-zinc-800/50 flex items-center justify-between px-3 md:px-6 bg-zinc-950/80 backdrop-blur-xl z-20 flex-shrink-0 sticky top-0">
           <div className="flex items-center gap-1 md:hidden">
-            <button 
+            <button
               className="p-2 -ml-2 text-zinc-400 hover:text-white rounded-lg active:bg-zinc-800/50 transition-colors"
               onClick={() => setIsSidebarOpen(true)}
               aria-label="Open Menu"
             >
               <Menu size={20} />
             </button>
-            <span className="font-semibold text-zinc-100 tracking-tight mr-1">
-               Gemini Omni
+            <span className="font-bold text-xl text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-400 to-white tracking-tight mr-1 drop-shadow-[0_0_10px_rgba(168,85,247,0.5)]">
+              Gemini Omni
             </span>
-            
+
             {/* History Button */}
-            <button 
+            <button
               className="p-2 text-zinc-400 hover:text-white rounded-lg active:bg-zinc-800/50 transition-colors"
               onClick={() => setIsSidebarOpen(true)}
               aria-label="History"
@@ -175,7 +175,7 @@ function App() {
             </button>
 
             {/* New Chat Button */}
-            <button 
+            <button
               className="p-2 text-zinc-400 hover:text-white rounded-lg active:bg-zinc-800/50 transition-colors"
               onClick={handleClearChat}
               aria-label="New Chat"
@@ -204,16 +204,16 @@ function App() {
           </div>
         </header>
 
-        <MessageList 
-          messages={messages} 
-          isLoading={isLoading} 
+        <MessageList
+          messages={messages}
+          isLoading={isLoading}
           currentModel={config.model}
           onExampleClick={(text) => handleSendMessage(text, [])}
         />
-        
-        <InputArea 
-          onSendMessage={handleSendMessage} 
-          disabled={isLoading} 
+
+        <InputArea
+          onSendMessage={handleSendMessage}
+          disabled={isLoading}
           model={config.model}
         />
       </main>
