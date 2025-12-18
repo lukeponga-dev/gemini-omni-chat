@@ -1,8 +1,9 @@
 import React, { useRef, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
-import { User, Bot, Loader2, Link as LinkIcon, ExternalLink, Sparkles, Copy, Check } from 'lucide-react';
+import { User, Loader2, Link as LinkIcon, ExternalLink, Sparkles, Copy, Check, Bot } from 'lucide-react';
 import { Virtuoso, VirtuosoHandle } from 'react-virtuoso';
 import { Message, Role } from '../types';
+import GBotIcon from './GBotIcon';
 
 interface MessageListProps {
   messages: Message[];
@@ -66,16 +67,21 @@ const MessageList: React.FC<MessageListProps> = ({ messages, isLoading, currentM
     }
 
     return (
-      <div className="flex-1 flex flex-col items-center justify-center text-zinc-500 p-4 md:p-8 animate-in fade-in duration-500 overflow-y-auto">
-        <div className="w-12 h-12 md:w-16 md:h-16 bg-zinc-900 rounded-2xl flex items-center justify-center mb-4 md:mb-6 shadow-xl border border-zinc-800 group shrink-0 mt-auto md:mt-0">
-          <Bot size={24} className="text-zinc-600 group-hover:text-blue-400 transition-colors md:w-8 md:h-8" />
+      <div className="flex-1 flex flex-col items-center text-zinc-500 px-[10%] md:px-8 py-8 md:py-12 animate-in fade-in duration-500 overflow-y-auto">
+        {/* Top spacing for vertical centering */}
+        <div className="flex-1 min-h-[8vh] md:min-h-0"></div>
+
+        {/* G-Bot Icon - positioned higher with glowing blue sphere */}
+        <div className="mb-6">
+          <GBotIcon size={80} isAnimating={false} className="mx-auto" />
         </div>
-        <h2 className="text-lg md:text-xl font-semibold text-zinc-300 mb-2 text-center">Gemini Omni</h2>
-        <p className="max-w-md text-center text-zinc-500 mb-6 md:mb-8 text-xs md:text-sm px-4 leading-relaxed">
-          You are using <span className="text-zinc-300 font-medium">
+
+        <h2 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-cyan-400 via-blue-400 to-blue-500 bg-clip-text text-transparent mb-3 text-center drop-shadow-[0_0_20px_rgba(34,211,238,0.3)]">Gemini Omni</h2>
+        <p className="max-w-md text-center text-zinc-400 mb-8 md:mb-10 text-sm md:text-base px-2 leading-relaxed">
+          You are using <span className="text-cyan-300 font-semibold">
             {isCoding ? 'Gemini 3 Coding' : isPro ? 'Gemini 3 Pro' : isImage ? 'Gemini 2.5 Flash Image' : isLite ? 'Gemini 2.5 Flash Lite' : 'Gemini 3 Flash'}
           </span>.
-          <span className="block mt-1 opacity-80">
+          <span className="block mt-2 opacity-75 text-xs md:text-sm">
             {isCoding
               ? 'Specialized for programming & architecture.'
               : isPro
@@ -88,7 +94,8 @@ const MessageList: React.FC<MessageListProps> = ({ messages, isLoading, currentM
           </span>
         </p>
 
-        <div className="grid grid-cols-1 gap-2.5 w-full max-w-2xl px-2 mb-4">
+        {/* Suggestion Cards - with inset margins */}
+        <div className="grid grid-cols-1 gap-3 w-full max-w-xl mb-6">
           {examples.map((ex, i) => (
             <button
               key={i}
@@ -99,29 +106,32 @@ const MessageList: React.FC<MessageListProps> = ({ messages, isLoading, currentM
                 }
                 onExampleClick(ex.prompt);
               }}
-              className="flex items-center gap-3 p-3.5 bg-gradient-to-br from-zinc-900/60 to-zinc-900/40 hover:from-zinc-800 hover:to-zinc-800/80 border border-zinc-800 hover:border-purple-500/30 rounded-xl text-left transition-all group active:scale-[0.98] shadow-lg hover:shadow-purple-500/10"
+              className="flex items-center gap-4 p-4 bg-gradient-to-br from-zinc-900/70 to-zinc-900/50 hover:from-zinc-800 hover:to-zinc-800/80 border border-zinc-800/70 hover:border-cyan-500/40 rounded-2xl text-left transition-all group active:scale-[0.97] shadow-xl hover:shadow-cyan-500/20"
             >
-              <div className="text-2xl group-hover:scale-110 transition-transform">
+              <div className="text-3xl group-hover:scale-110 transition-transform shrink-0">
                 {(ex as any).icon}
               </div>
               <div className="flex-1 min-w-0">
-                <div className="text-xs font-semibold text-zinc-200 group-hover:text-purple-200 truncate">{ex.title}</div>
-                <div className="text-[10px] md:text-xs text-zinc-500 line-clamp-1 group-hover:text-zinc-400">{ex.prompt}</div>
+                <div className="text-sm font-bold text-zinc-100 group-hover:text-purple-100 truncate mb-1">{ex.title}</div>
+                <div className="text-xs text-zinc-400 line-clamp-1 group-hover:text-zinc-300">{ex.prompt}</div>
               </div>
             </button>
           ))}
         </div>
 
         {/* Recent Chats / Pinned Prompts Section */}
-        <div className="w-full max-w-2xl px-2 mb-auto md:mb-0">
-          <div className="text-xs font-medium text-zinc-400 mb-2 px-1">Recent Chats</div>
-          <div className="flex flex-col gap-1.5">
-            <button className="flex items-center gap-2 p-2.5 bg-zinc-900/30 hover:bg-zinc-800/50 border border-zinc-800/50 hover:border-zinc-700 rounded-lg text-left transition-all group text-xs text-zinc-400 hover:text-zinc-300">
-              <span className="opacity-50">💬</span>
+        <div className="w-full max-w-xl">
+          <div className="text-xs font-semibold text-zinc-400 mb-3 px-1">Recent Chats</div>
+          <div className="flex flex-col gap-2">
+            <button className="flex items-center gap-3 p-3 bg-zinc-900/40 hover:bg-zinc-800/60 border border-zinc-800/60 hover:border-zinc-700 rounded-xl text-left transition-all group text-sm text-zinc-400 hover:text-zinc-300">
+              <span className="opacity-60 text-lg">💬</span>
               <span className="truncate">No recent chats yet</span>
             </button>
           </div>
         </div>
+
+        {/* Bottom spacing for vertical centering */}
+        <div className="flex-1 min-h-[12vh] md:min-h-0"></div>
       </div>
     );
   }

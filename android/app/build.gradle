@@ -1,14 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    buildToolsVersion '36.1.0 rc1'
     namespace = "com.gemini.omni.chat"
-    compileSdkVersion 36 // Or the latest stable version
+    compileSdkVersion 36
     defaultConfig {
 
         applicationId "com.gemini.omni.chat"
         minSdkVersion rootProject.ext.minSdkVersion
-        targetSdkVersion rootProject.ext.targetSdkVersion
+        targetSdkVersion 36
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"

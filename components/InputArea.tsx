@@ -106,7 +106,7 @@ const InputArea: React.FC<InputAreaProps> = ({ onSendMessage, disabled, model })
   };
 
   return (
-    <div className="border-t border-zinc-800/50 bg-zinc-950/80 backdrop-blur-lg p-3 md:p-4 z-20 pb-[max(12px,env(safe-area-inset-bottom))] transition-all duration-200">
+    <div className="border-t border-zinc-800/50 bg-zinc-950/80 backdrop-blur-lg px-[10%] py-4 md:p-4 z-20 pb-[max(16px,env(safe-area-inset-bottom))] transition-all duration-200">
       <div className="max-w-3xl mx-auto flex flex-col gap-3">
 
         {/* Image Previews */}
@@ -122,63 +122,74 @@ const InputArea: React.FC<InputAreaProps> = ({ onSendMessage, disabled, model })
           </div>
         )}
 
-        <div className="relative flex items-end gap-2 bg-zinc-900/50 p-1.5 md:p-2 rounded-2xl border border-zinc-800 focus-within:border-zinc-700 focus-within:bg-zinc-900 transition-all shadow-sm">
-          <input
-            type="file"
-            multiple
-            accept="image/*"
-            className="hidden"
-            ref={fileInputRef}
-            onChange={handleFileChange}
-          />
-          <button
-            onClick={() => fileInputRef.current?.click()}
-            className="p-2.5 text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800 rounded-xl transition-colors flex-shrink-0 active:scale-95"
-            title="Add images"
-            disabled={disabled}
-            aria-label="Upload images"
-          >
-            <ImageIcon size={20} strokeWidth={2} />
-          </button>
+        <div className="relative flex flex-col gap-3">
+          {/* Floating Navigation Tray */}
+          <div className="flex items-center justify-center gap-2 mb-1">
+            <div className="flex items-center gap-2 bg-zinc-900/70 backdrop-blur-md px-4 py-2.5 rounded-full border border-zinc-800/70 shadow-lg">
+              <input
+                type="file"
+                multiple
+                accept="image/*"
+                className="hidden"
+                ref={fileInputRef}
+                onChange={handleFileChange}
+              />
+              <button
+                onClick={() => fileInputRef.current?.click()}
+                className="p-2 text-zinc-400 hover:text-purple-300 hover:bg-zinc-800/50 rounded-lg transition-all flex-shrink-0 active:scale-95"
+                title="Add images"
+                disabled={disabled}
+                aria-label="Upload images"
+              >
+                <ImageIcon size={20} strokeWidth={2} />
+              </button>
 
-          <button
-            onClick={handleVoiceClick}
-            className={`p-2.5 rounded-xl transition-all flex-shrink-0 active:scale-95 relative ${isListening
-                ? 'text-purple-400 bg-purple-500/20 animate-pulse'
-                : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800'
-              }`}
-            title="Voice input"
-            disabled={disabled}
-            aria-label="Voice input"
-          >
-            <Mic size={20} strokeWidth={2} />
-            {isListening && (
-              <span className="absolute inset-0 rounded-xl border-2 border-purple-400 animate-ping"></span>
-            )}
-          </button>
+              <div className="w-px h-5 bg-zinc-700/50"></div>
 
-          <textarea
-            ref={textareaRef}
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder={getPlaceholder()}
-            className="flex-1 bg-transparent text-zinc-100 placeholder-zinc-500 resize-none outline-none py-2.5 max-h-[120px] md:max-h-[200px] overflow-y-auto text-base md:text-sm leading-relaxed"
-            rows={1}
-            disabled={disabled}
-          />
+              <button
+                onClick={handleVoiceClick}
+                className={`p-2 rounded-lg transition-all flex-shrink-0 active:scale-95 relative ${isListening
+                  ? 'text-purple-400 bg-purple-500/20 animate-pulse'
+                  : 'text-zinc-400 hover:text-purple-300 hover:bg-zinc-800/50'
+                  }`}
+                title="Voice input"
+                disabled={disabled}
+                aria-label="Voice input"
+              >
+                <Mic size={20} strokeWidth={2} />
+                {isListening && (
+                  <span className="absolute inset-0 rounded-lg border-2 border-purple-400 animate-ping"></span>
+                )}
+              </button>
+            </div>
+          </div>
 
-          <button
-            onClick={handleSend}
-            disabled={(!text.trim() && images.length === 0) || disabled}
-            className={`p-2.5 rounded-xl transition-all flex-shrink-0 active:scale-95 flex items-center justify-center ${(!text.trim() && images.length === 0) || disabled
+          {/* Text Input */}
+          <div className="relative flex items-end gap-2 bg-zinc-900/60 p-2 md:p-2.5 rounded-2xl border border-zinc-800/70 focus-within:border-purple-500/50 focus-within:bg-zinc-900/80 transition-all shadow-xl">
+
+            <textarea
+              ref={textareaRef}
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+              onKeyDown={handleKeyDown}
+              placeholder={getPlaceholder()}
+              className="flex-1 bg-transparent text-zinc-100 placeholder-zinc-400 resize-none outline-none py-3 px-2 max-h-[120px] md:max-h-[200px] overflow-y-auto text-base md:text-sm leading-relaxed"
+              rows={1}
+              disabled={disabled}
+            />
+
+            <button
+              onClick={handleSend}
+              disabled={(!text.trim() && images.length === 0) || disabled}
+              className={`p-3 rounded-xl transition-all flex-shrink-0 active:scale-95 flex items-center justify-center ${(!text.trim() && images.length === 0) || disabled
                 ? 'bg-zinc-800 text-zinc-600 cursor-not-allowed'
-                : 'bg-white text-black hover:bg-zinc-200 shadow-lg shadow-white/5'
-              }`}
-            aria-label="Send message"
-          >
-            {disabled ? <Loader2 size={20} className="animate-spin" /> : <Send size={20} fill="currentColor" className="ml-0.5" />}
-          </button>
+                : 'bg-gradient-to-br from-purple-500 to-blue-500 text-white hover:from-purple-600 hover:to-blue-600 shadow-lg shadow-purple-500/30'
+                }`}
+              aria-label="Send message"
+            >
+              {disabled ? <Loader2 size={20} className="animate-spin" /> : <Send size={20} fill="currentColor" className="ml-0.5" />}
+            </button>
+          </div>
         </div>
       </div>
     </div>

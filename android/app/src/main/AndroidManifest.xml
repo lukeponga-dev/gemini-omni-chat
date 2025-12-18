@@ -17,7 +17,7 @@ and the permissions that the application requires.
     -->
     <application
         android:allowBackup="true"
-        android:icon="@drawable/splash"
+        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"

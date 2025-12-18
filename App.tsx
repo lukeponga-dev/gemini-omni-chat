@@ -161,7 +161,7 @@ function App() {
             >
               <Menu size={20} />
             </button>
-            <span className="font-bold text-xl text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-400 to-white tracking-tight mr-1 drop-shadow-[0_0_10px_rgba(168,85,247,0.5)]">
+            <span className="font-bold text-xl text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-400 to-blue-500 tracking-tight mr-1 drop-shadow-[0_0_10px_rgba(34,211,238,0.4)]">
               Gemini Omni
             </span>
 
@@ -191,14 +191,14 @@ function App() {
           <div className="flex items-center gap-2">
             <button
               onClick={() => setIsSidebarOpen(true)}
-              className="text-[10px] md:text-xs font-medium px-3 py-1.5 rounded-full bg-zinc-900/80 border border-zinc-700/50 hover:border-purple-500/50 hover:bg-zinc-800 text-zinc-300 transition-all cursor-pointer flex items-center gap-2 shadow-sm active:scale-95"
+              className="text-[10px] md:text-xs font-medium px-3 py-1.5 rounded-full bg-zinc-900/80 border border-cyan-500/30 hover:border-cyan-400/50 hover:bg-zinc-800 text-cyan-200 transition-all cursor-pointer flex items-center gap-2 shadow-sm shadow-cyan-500/10 active:scale-95"
             >
-              <span className={`w-1.5 h-1.5 rounded-full ${isLoading ? 'bg-purple-500 animate-pulse' : 'bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]'}`}></span>
+              <span className={`w-1.5 h-1.5 rounded-full ${isLoading ? 'bg-cyan-400 animate-pulse shadow-[0_0_8px_rgba(34,211,238,0.8)]' : 'bg-cyan-400 shadow-[0_0_8px_rgba(34,211,238,0.6)]'}`}></span>
               <span className="truncate max-w-[120px] md:max-w-none">
                 {currentModelName}
               </span>
               {(config.useThinking || config.useGrounding) && config.model !== 'gemini-2.5-flash-image' && (
-                <div className="flex gap-1 pl-1 border-l border-zinc-700/50 ml-1">
+                <div className="flex gap-1 pl-1 border-l border-cyan-700/50 ml-1">
                   {config.useThinking && <span title="Thinking Enabled">🧠</span>}
                   {config.useGrounding && <span title="Search Enabled">🌐</span>}
                 </div>
