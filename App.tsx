@@ -151,59 +151,64 @@ function App() {
 
       {/* Removed bg-zinc-950 from main to allow snow to show through */}
       <main className="flex-1 flex flex-col min-w-0 relative z-10">
-        {/* Header */}
-        <header className="h-14 md:h-16 border-b border-zinc-800/50 flex items-center justify-between px-3 md:px-6 bg-zinc-950/80 backdrop-blur-xl z-20 flex-shrink-0 sticky top-0">
-          <div className="flex items-center gap-1 md:hidden">
-            <button
-              className="p-2 -ml-2 text-zinc-400 hover:text-white rounded-lg active:bg-zinc-800/50 transition-colors"
-              onClick={() => setIsSidebarOpen(true)}
-              aria-label="Open Menu"
-            >
-              <Menu size={20} />
-            </button>
-            <span className="font-bold text-xl text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-400 to-blue-500 tracking-tight mr-1 drop-shadow-[0_0_10px_rgba(34,211,238,0.4)]">
-              Gemini Omni
-            </span>
+        {/* Header - Improved for Android safe areas and navigation */}
+        <header className="pt-[env(safe-area-inset-top)] border-b border-zinc-800/40 bg-zinc-950/80 backdrop-blur-2xl z-20 flex-shrink-0 sticky top-0 transition-all duration-300">
+          <div className="h-14 md:h-16 flex items-center justify-between px-4 md:px-6">
+            <div className="flex items-center gap-3 md:hidden">
+              <button
+                className="p-2.5 -ml-2 text-zinc-400 hover:text-white rounded-xl active:bg-zinc-800/80 transition-all active:scale-90"
+                onClick={() => setIsSidebarOpen(true)}
+                aria-label="Open Menu"
+              >
+                <Menu size={22} strokeWidth={2.5} />
+              </button>
 
-            {/* History Button */}
-            <button
-              className="p-2 text-zinc-400 hover:text-white rounded-lg active:bg-zinc-800/50 transition-colors"
-              onClick={() => setIsSidebarOpen(true)}
-              aria-label="History"
-            >
-              <History size={18} />
-            </button>
+              <div className="flex flex-col">
+                <span className="font-extrabold text-lg text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 tracking-tight drop-shadow-[0_0_12px_rgba(34,211,238,0.3)]">
+                  Gemini Omni
+                </span>
+                <span className="text-[10px] text-zinc-500 font-medium uppercase tracking-widest -mt-1 opacity-80">
+                  AI Assistant
+                </span>
+              </div>
+            </div>
 
-            {/* New Chat Button */}
-            <button
-              className="p-2 text-zinc-400 hover:text-white rounded-lg active:bg-zinc-800/50 transition-colors"
-              onClick={handleClearChat}
-              aria-label="New Chat"
-            >
-              <SquarePen size={18} />
-            </button>
-          </div>
-
-          {/* Desktop Spacer */}
-          <div className="hidden md:block"></div>
-
-          {/* Model Badge */}
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => setIsSidebarOpen(true)}
-              className="text-[10px] md:text-xs font-medium px-3 py-1.5 rounded-full bg-zinc-900/80 border border-cyan-500/30 hover:border-cyan-400/50 hover:bg-zinc-800 text-cyan-200 transition-all cursor-pointer flex items-center gap-2 shadow-sm shadow-cyan-500/10 active:scale-95"
-            >
-              <span className={`w-1.5 h-1.5 rounded-full ${isLoading ? 'bg-cyan-400 animate-pulse shadow-[0_0_8px_rgba(34,211,238,0.8)]' : 'bg-cyan-400 shadow-[0_0_8px_rgba(34,211,238,0.6)]'}`}></span>
-              <span className="truncate max-w-[120px] md:max-w-none">
-                {currentModelName}
+            <div className="hidden md:flex items-center gap-3">
+              <span className="font-extrabold text-xl text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 tracking-tight">
+                Gemini Omni
               </span>
-              {(config.useThinking || config.useGrounding) && config.model !== 'gemini-2.5-flash-image' && (
-                <div className="flex gap-1 pl-1 border-l border-cyan-700/50 ml-1">
-                  {config.useThinking && <span title="Thinking Enabled">🧠</span>}
-                  {config.useGrounding && <span title="Search Enabled">🌐</span>}
+            </div>
+
+            {/* Model Badge & Quick Actions */}
+            <div className="flex items-center gap-3">
+              {/* Reset/New Chat Button - Visible on mobile for quick access */}
+              <button
+                className="p-2 text-zinc-500 hover:text-white rounded-lg active:bg-zinc-800/50 transition-colors md:hidden"
+                onClick={handleClearChat}
+                aria-label="New Chat"
+              >
+                <SquarePen size={18} />
+              </button>
+
+              <button
+                onClick={() => setIsSidebarOpen(true)}
+                className="group relative flex items-center gap-2 px-3 py-1.5 rounded-full bg-zinc-900/90 border border-cyan-500/20 hover:border-cyan-400/50 hover:bg-zinc-800 text-cyan-200 transition-all cursor-pointer shadow-sm shadow-cyan-500/5 active:scale-95"
+              >
+                <div className="relative">
+                  <span className={`block w-2 h-2 rounded-full ${isLoading ? 'bg-cyan-400 animate-pulse' : 'bg-cyan-400'} shadow-[0_0_8px_rgba(34,211,238,0.6)]`}></span>
+                  {isLoading && <span className="absolute inset-0 rounded-full bg-cyan-400 animate-ping opacity-75"></span>}
                 </div>
-              )}
-            </button>
+                <span className="text-[11px] md:text-xs font-bold truncate max-w-[100px] md:max-w-none tracking-tight">
+                  {currentModelName}
+                </span>
+                {(config.useThinking || config.useGrounding) && config.model !== 'gemini-2.5-flash-image' && (
+                  <div className="flex gap-1 pl-2 border-l border-zinc-700 ml-1">
+                    {config.useThinking && <span className="text-[10px]" title="Thinking Enabled">🧠</span>}
+                    {config.useGrounding && <span className="text-[10px]" title="Search Enabled">🌐</span>}
+                  </div>
+                )}
+              </button>
+            </div>
           </div>
         </header>
 

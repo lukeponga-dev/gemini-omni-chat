@@ -67,71 +67,69 @@ const MessageList: React.FC<MessageListProps> = ({ messages, isLoading, currentM
     }
 
     return (
-      <div className="flex-1 flex flex-col items-center text-zinc-500 px-[10%] md:px-8 py-8 md:py-12 animate-in fade-in duration-500 overflow-y-auto">
+      <div className="flex-1 flex flex-col items-center text-zinc-500 px-5 md:px-8 py-10 md:py-16 animate-in fade-in zoom-in duration-700 overflow-y-auto scrollbar-hide">
         {/* Top spacing for vertical centering */}
-        <div className="flex-1 min-h-[8vh] md:min-h-0"></div>
+        <div className="flex-1 min-h-[5vh] md:min-h-0"></div>
 
-        {/* G-Bot Icon - positioned higher with glowing blue sphere */}
-        <div className="mb-6">
-          <GBotIcon size={80} isAnimating={false} className="mx-auto" />
+        {/* G-Bot Icon - elevated with premium glow */}
+        <div className="mb-8 relative group">
+          <div className="absolute inset-0 bg-cyan-500/20 blur-3xl rounded-full group-hover:bg-cyan-500/30 transition-all duration-500"></div>
+          <GBotIcon size={100} isAnimating={isLoading} className="mx-auto relative z-10 drop-shadow-[0_0_15px_rgba(34,211,238,0.4)]" />
         </div>
 
-        <h2 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-cyan-400 via-blue-400 to-blue-500 bg-clip-text text-transparent mb-3 text-center drop-shadow-[0_0_20px_rgba(34,211,238,0.3)]">Gemini Omni</h2>
-        <p className="max-w-md text-center text-zinc-400 mb-8 md:mb-10 text-sm md:text-base px-2 leading-relaxed">
-          You are using <span className="text-cyan-300 font-semibold">
+        <div className="text-center space-y-2 mb-10 relative z-10">
+          <h2 className="text-2xl md:text-3xl font-black bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 bg-clip-text text-transparent drop-shadow-[0_0_20px_rgba(34,211,238,0.3)] tracking-tighter">
+            Gemini Omni
+          </h2>
+          <div className="flex items-center justify-center gap-2">
+            <span className="h-px w-8 bg-gradient-to-r from-transparent to-zinc-800"></span>
+            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-500">Next Gen Intelligence</span>
+            <span className="h-px w-8 bg-gradient-to-l from-transparent to-zinc-800"></span>
+          </div>
+        </div>
+
+        <p className="max-w-md text-center text-zinc-400 mb-10 text-sm md:text-base px-4 leading-relaxed font-medium">
+          Powered by <span className="text-cyan-300 font-bold">
             {isCoding ? 'Gemini 3 Coding' : isPro ? 'Gemini 3 Pro' : isImage ? 'Gemini 2.5 Flash Image' : isLite ? 'Gemini 2.5 Flash Lite' : 'Gemini 3 Flash'}
-          </span>.
-          <span className="block mt-2 opacity-75 text-xs md:text-sm">
+          </span>
+          <span className="block mt-2 opacity-60 text-xs font-normal">
             {isCoding
-              ? 'Specialized for programming & architecture.'
+              ? 'Architecture & high-performance coding.'
               : isPro
-                ? 'Complex reasoning, coding & visual analysis.'
+                ? 'Deep reasoning & advanced analysis.'
                 : isImage
-                  ? 'Edit images and generate advanced visuals.'
+                  ? 'Creative editing & visual generation.'
                   : isLite
-                    ? 'Fast, low-latency, and simple tasks.'
-                    : 'Speed, efficiency & everyday tasks.'}
+                    ? 'Ultra-fast responses for simple tasks.'
+                    : 'Balanced for speed & daily knowledge.'}
           </span>
         </p>
 
-        {/* Suggestion Cards - with inset margins */}
-        <div className="grid grid-cols-1 gap-3 w-full max-w-xl mb-6">
+        {/* Suggestion Cards - optimized for mobile grid */}
+        <div className="grid grid-cols-1 gap-4 w-full max-w-lg mb-10">
           {examples.map((ex, i) => (
             <button
               key={i}
               onClick={() => {
-                // Haptic feedback (soft vibration)
-                if ('vibrate' in navigator) {
-                  navigator.vibrate(5);
-                }
+                if ('vibrate' in navigator) navigator.vibrate(5);
                 onExampleClick(ex.prompt);
               }}
-              className="flex items-center gap-4 p-4 bg-gradient-to-br from-zinc-900/70 to-zinc-900/50 hover:from-zinc-800 hover:to-zinc-800/80 border border-zinc-800/70 hover:border-cyan-500/40 rounded-2xl text-left transition-all group active:scale-[0.97] shadow-xl hover:shadow-cyan-500/20"
+              className="flex items-center gap-5 p-5 bg-zinc-900/60 hover:bg-zinc-800/80 border border-zinc-800/80 hover:border-cyan-500/50 rounded-2xl text-left transition-all group active:scale-[0.98] shadow-2xl relative overflow-hidden"
             >
-              <div className="text-3xl group-hover:scale-110 transition-transform shrink-0">
+              <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+              <div className="text-4xl group-hover:scale-110 transition-transform shrink-0 drop-shadow-lg">
                 {(ex as any).icon}
               </div>
               <div className="flex-1 min-w-0">
-                <div className="text-sm font-bold text-zinc-100 group-hover:text-purple-100 truncate mb-1">{ex.title}</div>
-                <div className="text-xs text-zinc-400 line-clamp-1 group-hover:text-zinc-300">{ex.prompt}</div>
+                <div className="text-base font-bold text-zinc-100 group-hover:text-cyan-100 truncate mb-1">{ex.title}</div>
+                <div className="text-xs text-zinc-500 line-clamp-1 group-hover:text-zinc-300 font-medium">{ex.prompt}</div>
               </div>
             </button>
           ))}
         </div>
 
-        {/* Recent Chats / Pinned Prompts Section */}
-        <div className="w-full max-w-xl">
-          <div className="text-xs font-semibold text-zinc-400 mb-3 px-1">Recent Chats</div>
-          <div className="flex flex-col gap-2">
-            <button className="flex items-center gap-3 p-3 bg-zinc-900/40 hover:bg-zinc-800/60 border border-zinc-800/60 hover:border-zinc-700 rounded-xl text-left transition-all group text-sm text-zinc-400 hover:text-zinc-300">
-              <span className="opacity-60 text-lg">💬</span>
-              <span className="truncate">No recent chats yet</span>
-            </button>
-          </div>
-        </div>
-
-        {/* Bottom spacing for vertical centering */}
-        <div className="flex-1 min-h-[12vh] md:min-h-0"></div>
+        {/* Bottom spacing */}
+        <div className="flex-1 min-h-[10vh] md:min-h-0"></div>
       </div>
     );
   }

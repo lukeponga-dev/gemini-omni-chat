@@ -106,7 +106,7 @@ const InputArea: React.FC<InputAreaProps> = ({ onSendMessage, disabled, model })
   };
 
   return (
-    <div className="border-t border-zinc-800/50 bg-zinc-950/80 backdrop-blur-lg px-[10%] py-4 md:p-4 z-20 pb-[max(16px,env(safe-area-inset-bottom))] transition-all duration-200">
+    <div className="border-t border-zinc-900/40 bg-zinc-950/80 backdrop-blur-2xl px-4 py-6 md:px-[10%] md:py-8 z-20 pb-[max(32px,env(safe-area-inset-bottom))] transition-all duration-300">
       <div className="max-w-3xl mx-auto flex flex-col gap-3">
 
         {/* Image Previews */}
@@ -123,9 +123,9 @@ const InputArea: React.FC<InputAreaProps> = ({ onSendMessage, disabled, model })
         )}
 
         <div className="relative flex flex-col gap-3">
-          {/* Floating Navigation Tray */}
-          <div className="flex items-center justify-center gap-2 mb-1">
-            <div className="flex items-center gap-2 bg-zinc-900/70 backdrop-blur-md px-4 py-2.5 rounded-full border border-zinc-800/70 shadow-lg">
+          {/* Floating Navigation Tray - Optimized for mobile touch */}
+          <div className="flex items-center justify-center gap-2 mb-1 animate-in slide-in-from-bottom-2 duration-300">
+            <div className="flex items-center gap-3 bg-zinc-900/80 backdrop-blur-xl px-5 py-2.5 rounded-full border border-zinc-800/60 shadow-2xl shadow-purple-500/5">
               <input
                 type="file"
                 multiple
@@ -136,29 +136,29 @@ const InputArea: React.FC<InputAreaProps> = ({ onSendMessage, disabled, model })
               />
               <button
                 onClick={() => fileInputRef.current?.click()}
-                className="p-2 text-zinc-400 hover:text-purple-300 hover:bg-zinc-800/50 rounded-lg transition-all flex-shrink-0 active:scale-95"
+                className="p-2.5 text-zinc-400 hover:text-purple-400 hover:bg-zinc-800/80 rounded-xl transition-all flex-shrink-0 active:scale-90"
                 title="Add images"
                 disabled={disabled}
                 aria-label="Upload images"
               >
-                <ImageIcon size={20} strokeWidth={2} />
+                <ImageIcon size={22} strokeWidth={2.2} />
               </button>
 
-              <div className="w-px h-5 bg-zinc-700/50"></div>
+              <div className="w-px h-6 bg-zinc-800/80 mx-1"></div>
 
               <button
                 onClick={handleVoiceClick}
-                className={`p-2 rounded-lg transition-all flex-shrink-0 active:scale-95 relative ${isListening
-                  ? 'text-purple-400 bg-purple-500/20 animate-pulse'
-                  : 'text-zinc-400 hover:text-purple-300 hover:bg-zinc-800/50'
+                className={`p-2.5 rounded-xl transition-all flex-shrink-0 active:scale-90 relative ${isListening
+                  ? 'text-purple-400 bg-purple-500/20'
+                  : 'text-zinc-400 hover:text-purple-400 hover:bg-zinc-800/80'
                   }`}
                 title="Voice input"
                 disabled={disabled}
                 aria-label="Voice input"
               >
-                <Mic size={20} strokeWidth={2} />
+                <Mic size={22} strokeWidth={2.2} />
                 {isListening && (
-                  <span className="absolute inset-0 rounded-lg border-2 border-purple-400 animate-ping"></span>
+                  <span className="absolute inset-0 rounded-xl border-2 border-purple-400 animate-ping opacity-75"></span>
                 )}
               </button>
             </div>
